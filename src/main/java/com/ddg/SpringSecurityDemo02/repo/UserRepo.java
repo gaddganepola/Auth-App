@@ -1,4 +1,7 @@
 package com.ddg.SpringSecurityDemo02.repo;
 
-public interface UserRepo {
+import com.ddg.SpringSecurityDemo02.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepo extends JpaRepository<User, Integer> {
 }
