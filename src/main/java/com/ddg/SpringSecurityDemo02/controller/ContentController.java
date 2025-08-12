@@ -13,6 +13,11 @@ public class ContentController {
         return "login";
     }
 
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("Test request", HttpStatus.OK);
