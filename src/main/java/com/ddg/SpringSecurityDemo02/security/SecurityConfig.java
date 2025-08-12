@@ -17,7 +17,11 @@ public class SecurityConfig {
                 .formLogin(form -> {
                     form.loginPage("/login");
                 })
-
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/login").permitAll();
+                    auth.requestMatchers("/register").permitAll();
+                    auth.anyRequest().authenticated();
+                })
                 .build();
 
     }
