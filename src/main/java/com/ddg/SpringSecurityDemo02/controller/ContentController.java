@@ -13,6 +13,9 @@ public class ContentController {
         return "login";
     }
 
-
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("Test request", HttpStatus.OK);
+    }
 
 }
