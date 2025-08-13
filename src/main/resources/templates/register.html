@@ -120,12 +120,12 @@
     const messageDiv = document.getElementById('message');
     const form = document.getElementById('signupForm');
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const data = {
-        username: e.target.username.value,
-        email: e.target.email.value,
+        username: e.target.username.value.trim(),
+        email: e.target.email.value.trim(),
         password: e.target.password.value,
       };
 
@@ -134,31 +134,33 @@
       messageDiv.textContent = '';
       messageDiv.className = '';
 
-      fetch('/user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error('Signup failed');
-          return res.json();
-        })
-        .then((data) => {
-          messageDiv.textContent = 'Registered successfully! Login now.';
-          messageDiv.className = 'success';
-          messageDiv.style.display = 'block';
-
-          // Redirect after 2 seconds
-          setTimeout(() => {
-            window.location.href = '/login';
-          }, 2000);
-        })
-        .catch((err) => {
-          console.error('Error:', err);
-          messageDiv.textContent = 'Signup failed. Please try again.';
-          messageDiv.className = 'error';
-          messageDiv.style.display = 'block';
+      try {
+        const res = await fetch('/user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
         });
+
+        const text = await res.text(); // Read plain text response
+        if (!res.ok) {
+          throw new Error(text || 'Signup failed');
+        }
+
+        // If successful, parse JSON and show success message
+        JSON.parse(text); // parsing in case you want to use returned data
+        messageDiv.textContent = 'Registered successfully! Login now.';
+        messageDiv.className = 'success';
+        messageDiv.style.display = 'block';
+
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
+
+      } catch (err) {
+        messageDiv.textContent = err.message;
+        messageDiv.className = 'error';
+        messageDiv.style.display = 'block';
+      }
     });
 </script>
 </body>
